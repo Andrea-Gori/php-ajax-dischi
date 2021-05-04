@@ -2,7 +2,8 @@ var app = new Vue ({
   el: '#root',
   data:{
     disks: [],
-    genere:'',
+    artist:'',
+    arrayArtists: [],
   },
   methods:{
     /* album: function () {
@@ -13,11 +14,21 @@ var app = new Vue ({
         } )
         });
     } */
+    cambia: function () {
+      axios.get(`http://localhost/PHP/php-ajax-dischi/author_change.php?author=${this.artist}`).then((response) => {
+        this.disks = response.data;
+      });
+    },
   },
   created() {
     axios.get('http://localhost/PHP/php-ajax-dischi/dati.php').then((response) => {
       this.disks = response.data;
-      
+      for (let i = 0; i < response.data.length; i++) {
+        let artist = response.data[i].author;
+        if (!(this.arrayArtists.includes(artist))) {
+          this.arrayArtists.push(artist)
+        }
+      }
     });
   },
 });
